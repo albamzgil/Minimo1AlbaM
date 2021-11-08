@@ -25,6 +25,7 @@ public class ProductManagerImpTest {
         scenario.addProduct(new Product("donut",2.2,20));
         scenario.addProduct(new Product("cafe",5.0,18));
         scenario.addProduct(new Product("bocata",6.4,13));
+        scenario.addProduct(new Product("llet",2,3));
 
         scenario.addUser("Pau","321");
         Order fisrtOrder = new Order(scenario.getUser("Pau"));
