@@ -6,10 +6,10 @@ import java.util.List;
 public class OrderTO {
 
     private String user;
-    private List<ProductTO> products;
+    private List<PuntoInteresTO> puntos;
 
     public OrderTO() {
-        this.products = new ArrayList<ProductTO>();
+        this.puntos = new ArrayList<PuntoInteresTO>();
     }
 
     public String getUser() {
@@ -20,19 +20,19 @@ public class OrderTO {
         this.user = user;
     }
 
-    public List<ProductTO> getProducts() {
-        return products;
+    public List<PuntoInteresTO> getPuntos() {
+        return puntos;
     }
 
-    public void setProducts(List<ProductTO> products) {
-        this.products = products;
+    public void setProducts(List<PuntoInteresTO> puntos) {
+        this.puntos = puntos;
     }
 
     public OrderTO(Order order) {
         this();
         this.user = order.user.name;
-        for (Product p: order.productList) {
-            this.products.add(new ProductTO(p.name));
+        for (PuntoInteres p: order.puntosList) {
+            this.puntos.add(new PuntoInteresTO(p.name));
         }
     }
 }

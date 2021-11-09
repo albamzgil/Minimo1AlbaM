@@ -1,8 +1,8 @@
 package edu.upc.dsa.services;
 
 
-import edu.upc.dsa.ProductManager;
-import edu.upc.dsa.ProductManagerImpl;
+import edu.upc.dsa.UsuarioManager;
+import edu.upc.dsa.UsuarioImpl;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,47 +18,57 @@ import java.util.List;
 
 @Api(value = "/Products", description = "Endpoint to Track Service")
 @Path("/Products")
-public class ProductService {
+public class UserService {
 
-    private ProductManager scenario;
+    private UsuarioManager scenario;
 
-    public ProductService() {
-        scenario = ProductManagerImpl.getInstance();
-        scenario.addProduct(new Product("agua", 1, 10));
-        scenario.addProduct(new Product("llet", 2, 5));
-        scenario.addProduct(new Product("pa", 0.5, 15));
-        scenario.addProduct(new Product("patata", 3, 8));
-        scenario.addProduct(new Product("donut", 2.2, 20));
-        scenario.addProduct(new Product("cafe", 5.0, 18));
-        scenario.addProduct(new Product("bocata", 6.4, 13));
+    public UserService() {
+        scenario = UsuarioImpl.getInstance();
+        scenario.addPunto(new PuntoInteres("Puerta 1"));
+        scenario.addPunto(new PuntoInteres("Casilla 1"));
+        scenario.addPunto(new PuntoInteres("Puerta 2"));
+        scenario.addPunto(new PuntoInteres("Casilla 2"));
+        scenario.addPunto(new PuntoInteres("Puente"));
 
         scenario.addUser("Laura", "123");
         scenario.addUser("Alba", "231");
         scenario.addUser("Pau", "321");
 
-        Order order = new Order(scenario.getUser("Pau"));
-        order.addLP(new Product("pa", 0.5, 4));
-        order.addLP(new Product("donut",2.2,2));
-        order.addLP(new Product("cafe",5.0,1));
-        order.addLP(new Product("bocata",6.4,1));
+        Order order = new Order(scenario.getUser("Alba"));
+        order.addLP(new PuntoInteres("Puente"));
+        order.addLP(new PuntoInteres("Puerta 2"));
         scenario.doOrder(order);
     }
 
-
-
     @POST
-    @ApiOperation(value = "Add a new product", notes = "Add a new product")
+    @ApiOperation(value = "Add a new user", notes = "Add a new user")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Product.class),
+            @ApiResponse(code = 201, message = "Successful", response = User.class),
             @ApiResponse(code = 500, message = "Validation Error")
     })
-    @Path("/addProduct")
+    @Path("/addUser")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addProduct(Product product) {
+    public Response addUser(User user) {
 
-        if (product.getName()==null || product.getAmount()==0 ) return Response.status(500).entity(product).build();
-        this.scenario.addProduct(product);
-        return Response.status(201).entity(product).build()  ;
+        if (user.getName()==null) return Response.status(500).entity(user).build();
+        this.scenario.addUser(user);
+        return Response.status(201).entity(user).build()  ;
+
+    }
+
+    @POST
+    @ApiOperation(value = "Add a new point", notes = "Add a new point")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = PuntoInteres.class),
+            @ApiResponse(code = 500, message = "Validation Error")
+    })
+    @Path("/addPunto")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addPunto(PuntoInteres punto) {
+
+        if (punto.getName()==null) return Response.status(500).entity(punto).build();
+        this.scenario.addPunto(punto);
+        return Response.status(201).entity(punto).build()  ;
 
     }
 
@@ -81,36 +91,36 @@ public class ProductService {
     }
 
     @GET
-    @ApiOperation(value = "Get products by price", notes = "Get products by price")
+    @ApiOperation(value = "Get points by user", notes = "Get points by user")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Product.class, responseContainer = "List"),
+            @ApiResponse(code = 201, message = "Successful", response = PuntoInteres.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "Products not found")
     })
-    @Path("/ProductsByPrice/")
+    @Path("/PuntosByUser/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductsByPrice() {
-        List<Product> list = scenario.getProductsByPrice();
-        GenericEntity<List<Product>> entity = new GenericEntity<List<Product>>(list) {};
+    public Response getPuntosByUser(@PathParam("user") String user) {
+        List<PuntoInteres> list = scenario.getPuntosByUsers(user);
+        GenericEntity<List<PuntoInteres>> entity = new GenericEntity<List<PuntoInteres>>(list) {};
         if (list.size() == 0) return Response.status(404).build();
         return Response.status(201).entity(entity).build();
     }
 
     @GET
-    @ApiOperation(value = "Get products by Sales", notes = "Get products by sales")
+    @ApiOperation(value = "Get users by point", notes = "Get products by sales")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Product.class, responseContainer = "List"),
+            @ApiResponse(code = 201, message = "Successful", response = PuntoInteres.class, responseContainer = "List"),
             @ApiResponse(code = 404, message = "Products not found")
     })
-    @Path("/ProductsBySales/")
+    @Path("/UsersByPunto/")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductsBySales() {
-        List<Product> list = scenario.getProductsBySales();
-        GenericEntity<List<Product>> entity = new GenericEntity<List<Product>>(list) {};
+    public Response getUsersByPunto(@PathParam("punto interes") PuntoInteres punto) {
+        List<String> list = scenario.getUsersByPunto(punto);
+        GenericEntity<List<String>> entity = new GenericEntity<List<String>>(list) {};
         if (list.size() == 0) return Response.status(404).build();
         return Response.status(201).entity(entity).build();
     }
 
-    @GET
+   @GET
     @ApiOperation(value = "Get order by users", notes = "Get order by users")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = OrderTO.class, responseContainer = "List"),

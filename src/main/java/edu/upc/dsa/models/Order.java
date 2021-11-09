@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Order {
     public User user;
-    public List<Product> productList;
+    public List<PuntoInteres> puntosList;
 
 
     public Order(User user) {
         this.user = user;
-        this.productList = new ArrayList<Product>();
+        this.puntosList = new ArrayList<PuntoInteres>();
     }
 
-    public Order(){}
+    public Order(String user){}
 
     public User getUser() {
         return user;
@@ -24,25 +24,24 @@ public class Order {
         this.user = user;
     }
 
-    public List<Product> getProductList() {
-        return productList;
+    public List<PuntoInteres> getPuntosList() {
+        return puntosList;
     }
 
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
+    public void setPuntosList(List<PuntoInteres> puntosList) {
+        this.puntosList = puntosList;
     }
 
 
-    public void addLP(Product product) {
-
-        productList.add(product);
+    public void addLP(PuntoInteres punto) {
+        puntosList.add(punto);
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "user=" + user +
-                ", productList=" + productList +
+                ", puntosList=" + puntosList +
                 '}';
     }
 }

@@ -1,10 +1,10 @@
 package edu.upc.dsa.models;
 
-public class ProductTO {
+public class PuntoInteresTO {
     private String name;
     private int q;
 
-    public ProductTO() {
+    public PuntoInteresTO() {
 
     }
 
@@ -24,7 +24,7 @@ public class ProductTO {
         this.q = q;
     }
 
-    public ProductTO(String name) {
+    public PuntoInteresTO(String name) {
         this.name = name;
     }
 }
